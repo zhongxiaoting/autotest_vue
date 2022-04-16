@@ -1,0 +1,53 @@
+ const items = [
+            {
+                icon: "el-icon-lx-home",
+                index: "/403",
+                title: "输入服务器信息",
+                // /form
+            },
+            {
+                icon: "el-icon-lx-cascades",
+                index: "/Dashboard",
+                title: "硬件信息",
+            },
+            {
+                icon: "el-icon-lx-copy",
+                index: "/404",
+                title: "一键测试界面",
+            },
+            {
+                icon: "el-icon-lx-calendar",
+                index: "3",
+                title: "单项测试",
+                subs: [
+                    {
+                        index: "/Tabs",
+                        title: "硬件信息校验",
+
+                    },
+                    {
+                        index: "/Icon",
+                        title: "cpu stress",
+                    },
+                    {
+                        index: "/Editor",
+                        title: "内存 mem",
+                    },
+                    {
+                        index: "/Charts",
+                        title: "硬盘 fio",
+                        
+                    },
+                    {
+                        index: "/Upload",
+                        title: "压力测试",
+                    },
+                    {
+                        index: "/403",
+                        title: "黑名单检测",
+
+                    },
+                ],
+            },
+            
+        ];
