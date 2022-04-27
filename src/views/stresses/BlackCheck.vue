@@ -6,7 +6,7 @@
                                 <div class="grid-content grid-con-3">
                                     <i class="el-icon-message-solid grid-con-icon"></i>
                                     <div class="grid-cont-right">
-                                        <div class="grid-num">压力测试</div>
+                                        <div class="grid-num">黑名单检查</div>
                                         <el-switch v-model="qqt" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
                                     </div>
                                 </div>
@@ -14,14 +14,6 @@
                             <!-- <div class="cardx"></div> -->
                         </el-col>
         </el-row>       
-                <el-row>
-                    <el-col>
-                        <div class="nav-title grid-content3 bg-purple1">压力测试</div>
-                    </el-col>
-                </el-row>
-                <el-row type="flex">
-                    <el-col :span="17" :offset="3"><el-card class="grid-content2 bg-purple nb"></el-card></el-col>
-                </el-row>
             <el-row type="flex" justify="space-around">
                 <el-col :span="10" :offset="3"><el-card class="grid-content3 bg-purple nav-title nb">错误日志检查黑名单检查</el-card>
                 </el-col>
@@ -31,7 +23,7 @@
             </el-row>
             <el-row type="flex" justify="space-around">
                 <el-col :span="4">
-                    <el-tag effect="dark" type="success" class="grid-content nav-title">ALL PASS</el-tag>
+                    <el-tag effect="dark" type="success" class="grid-content nav-title">PASS</el-tag>
                     </el-col>
                 <el-col :span="4">
                     <el-tag effect="dark" type="info" class="grid-content nav-title">结束测试</el-tag>

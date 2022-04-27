@@ -49,44 +49,82 @@ export default {
                 index: "/AllHardwareInfo",
                 title: "硬件信息",
             },
-            {
-                icon: "el-icon-lx-copy",
-                index: "/OneKeyTest",
-                title: "一键测试界面",
-            },
+
+
             {
                 icon: "el-icon-lx-calendar",
-                index: "3",
-                title: "单项测试",
+                index: "4",
+                title: "MES对照",
                 subs: [
                     {
-                        index: "/HardwareInfoVerification",
+                        index: "/check/HardwareInfoVerification",
                         title: "硬件信息校验",
 
                     },
                     {
-                        index: "/CpuInfoVerification",
+                        index: "/check/CpuInfoVerification",
                         title: "cpu信息校验",
                     },
                     {
-                        index: "/MemoryInfoVerification",
+                        index: "/check/MemoryInfoVerification",
                         title: "内存信息校验",
                     },
                     {
-                        index: "/HddInfoVerification",
+                        index: "/check/HddInfoVerification",
                         title: "硬盘信息校验",
                         
+                    },                  
+                ],
+            },
+
+
+            {
+                icon: "el-icon-mobile",
+                index: "3",
+                title: "性能测试",
+                subs: [
+                    {
+                        index: "/stresses/CpuMceCheck",
+                        title: "CPU MCE检查",
                     },
                     {
-                        index: "/StressTest",
-                        title: "压力测试",
+                        index: "/stresses/MemEccCheck",
+                        title: "内存ECC检查",
                     },
                     {
-                        index: "/StressTest",
-                        title: "黑名单检测",
+                        index: "/stresses/CpuStress",
+                        title: "CPU压力测试",
 
                     },
+                    {
+                        index: "/stresses/MemoryStress",
+                        title: "内存压力测试",
+
+                    }, 
+                    {
+                        index: "/stresses/HddStress",
+                        title: "硬盘压力测试",
+
+                    }, 
+                    {
+                        index: "/stresses/NetworkStress",
+                        title: "网卡压力测试",
+
+                    }, 
+                    {
+                        index: "/stresses/BlackCheck",
+                        title: "黑名单检测",
+
+                    },                 
                 ],
+            },
+
+
+
+            {
+                icon: "el-icon-lx-copy",
+                index: "/OneKeyTest",
+                title: "一键测试界面",
             },
             
         ];

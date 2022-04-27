@@ -1,11 +1,33 @@
 <template>
-    <router-view />
+    <div id="app">
+        <router-view v-if="isRouterAlive"/>
+  </div>
 </template>
 
 <script>
-export default {};
-// import { resolveComponent as _resolveComponent } from "vue"
+export default {
+    name:'app',
+    data(){
+        return{
+            isRouterAlive: true
+        }
+    },
+    provide(){
+        return{
+        reload:this.reload
+        }
+    },
+    methods:{
+        reload(){
+            this.isRouterAlive = false
+            this.$nextTick(function(){
+                this.isRouterAlive = true
+            })
+        }
+    }
+}
 </script>
+
 
 <style>
 @import "./assets/css/main.css";

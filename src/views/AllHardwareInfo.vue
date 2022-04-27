@@ -158,17 +158,32 @@
 </template>
 
 <script>
-
-import {reactive } from "vue";
 import {getsystem, getcpu, getmem, getnetwork, gethdd} from '../api/api.js';
 
 
 export default {
     name: "AllHardwareInfo",
 
+    data() {
+        return {
+            active_index: {index:0},
+            sysytem_title: {title: '系统'},
+            detail_info: [],
+            hw_info_list: [
+                {title: '系统',img: '/src/assets/img/system.png'},
+                {title: 'CPU',img: '/src/assets/img/CPU.png'},
+                {title: '内存条',img: '/src/assets/img/mem.png'},
+                {title: '硬盘',img: '/src/assets/img/hdd.png'},
+                {title: '网卡',img: '/src/assets/img/fan.png'},
+         ]
+        }
+    },
+
     created() {
-        getsystem(this.detail_info)
-        
+        getsystem().then(res =>{
+            this.detail_info = res.data.system_info
+            sessionStorage.setItem('info0', JSON.stringify(this.detail_info))
+        })
     },
     
     methods: {
@@ -176,58 +191,61 @@ export default {
             this.active_index.index = i
             this.sysytem_title.title = this.hw_info_list[i]['title']
             if (i == 0) {
-                getsystem(this.detail_info).then(res => {
-                    this.detail_info = res.data.system_info})
+                let data = JSON.parse(sessionStorage.getItem('info0'))
+                if (data) {
+                    this.detail_info = data
+                } else {
+                    getsystem().then(res => {
+                        this.detail_info = res.data.system_info
+                        sessionStorage.setItem('info0', JSON.stringify(this.detail_info))
+                    })
+                }
             }else if(i == 1) {
-                 getcpu(this.detail_info).then(res => {
-                    this.detail_info =res.data.cpu_info})
+                let data = JSON.parse(sessionStorage.getItem('info1'))
+                if (data) {
+                    this.detail_info = data
+                    console.log(data)
+                } else {
+                    getcpu().then(res => {
+                        this.detail_info =res.data.cpu_info
+                        sessionStorage.setItem('info1', JSON.stringify(this.detail_info))
+                    })
+                }
             }else if(i==2){
-                getmem().then(res=>{
-                    this.detail_info = res.data.memory_info}) 
+                let data = JSON.parse(sessionStorage.getItem('info2'))
+                if (data) {
+                    this.detail_info = data
+                } else {
+                    getmem().then(res=>{
+                        this.detail_info = res.data.memory_info
+                        sessionStorage.setItem('info2', JSON.stringify(this.detail_info))
+                    }) 
+                }
             }else if(i==3){
-                gethdd(this.detail_info).then(res => {
-                    this.detail_info =res.data.hdd_info})
+                let data = JSON.parse(sessionStorage.getItem('info3'))
+                if (data) {
+                    this.detail_info = data
+                } else {
+                    gethdd().then(res => {
+                        this.detail_info =res.data.hdd_info
+                        sessionStorage.setItem('info3', JSON.stringify(this.detail_info))
+                    })
+                }
             }else{
-                getnetwork(this.detail_info).then(res => {
-                    this.detail_info =res.data.network_info})
+                let data = JSON.parse(sessionStorage.getItem('info4'))
+                if (data) {
+                    this.detail_info = data
+                } else {
+                    getnetwork().then(res => {
+                        this.detail_info =res.data.network_info
+                        sessionStorage.setItem('info4', JSON.stringify(this.detail_info))
+                    })
+                }
             }
         },
         
     },
 
-
-   
-    setup() {
-        let active_index =reactive({index:0}) ;
-        let sysytem_title = reactive({title: '系统'})
-        let detail_info =reactive([
-            
-            // '固件版本:   1.00',
-            // '固件日期:   May 20 2021',
-            // 'BIOS版本： 1.91',
-            // 'BMC版本：2.2',
-            // '远程IP：192.168.38.22'
-        ])
-
-        const hw_info_list = [
-                {title: '系统',img: '/src/assets/img/system.png'},
-                {title: 'CPU',img: '/src/assets/img/CPU.png'},
-                {title: '内存条',img: '/src/assets/img/mem.png'},
-                {title: '硬盘',img: '/src/assets/img/hdd.png'},
-                // {title: 'PCIE',img: '/src/assets/img/PCIE.png'},
-                // {title: 'NVME',img: '/src/assets/img/nvme.png'},
-                {title: '网卡',img: '/src/assets/img/fan.png'},
-                // {title: '电源',img: '/src/assets/img/power.png'},
-                // {title: '背板',img: '/src/assets/img/back.png'},
-         ]
-                
-        return {    
-            hw_info_list,
-            active_index,
-            detail_info,
-            sysytem_title
-        };
-    },
 };
 
 
@@ -385,7 +403,7 @@ export default {
 .title{
     font-size: 30px;
     font-weight: bold;
-    margin: 0px 20px 20px 250px;
+    margin: 0px 20px 20px 370px;
 
 }
 .newlife{
@@ -395,7 +413,7 @@ export default {
     display: flex;
     flex-direction: column;
     flex:  1;
-    margin: 10px 10px 30px 30px;
+    margin: 10px 10px 50px 60px;
     height: 80%;
     width: 750px;
     color: rgb(15, 14, 14);
