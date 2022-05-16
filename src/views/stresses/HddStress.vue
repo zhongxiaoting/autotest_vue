@@ -28,21 +28,23 @@
                 </el-card>
             </el-col>
         </el-row>       
-            <el-row type="flex">
-                <el-col :span="17" :offset="3" v-loading="loading" >
-                    <el-scrollbar style="height:100%">
-                        <el-card class="grid-content2 bg-purple nb">
-                        {{hdd_stress}}
-                        </el-card>
-                    </el-scrollbar>
-                </el-col>
-            </el-row>
-            <el-row type="flex" justify="space-around">
-                <el-col :span="3">
-                    <el-tag effect="dark" :style="colorTip" type="info" class="grid-content nav-title">{{status||'等待测试'}}</el-tag>
-                </el-col>
-                <el-button :span="3" type="danger" class="nav-title grid-content" @click="stop()">结束测试</el-button>
-            </el-row>
+        <el-row type="flex">
+            <el-col :span="17" :offset="3" v-loading="loading">
+                <el-card class="grid-content2 bg-purple nb" v-if="interrupt===false">
+                    <div v-for="(item,index) in hdd_stress" :key="index">{{item}}</div>
+                </el-card>
+                <el-card class="grid-content2 bg-purple nb" v-if="interrupt===true">
+                    {{cmd_infor}}
+                </el-card>
+            </el-col>
+        </el-row>
+        <el-row type="flex" justify="space-around">
+            <el-col :span="3">
+                <el-tag effect="dark" :style="colorTip" type="info" class="grid-content nav-title"  v-if="interrupt===false">{{status||'等待测试'}}</el-tag>
+                <el-tag effect="dark" :style="stop_colorTip" type="info" class="grid-content nav-title" v-if="interrupt===true">{{stop_status||'等待测试'}}</el-tag>
+            </el-col>
+            <el-button :span="3" type="danger" class="nav-title grid-content" @click="stop()">结束测试</el-button>
+        </el-row>
     </div>
 </template>
 
@@ -75,20 +77,27 @@ export default {
             value: '',
             qqt: false,
             stressHDD: [],
-            hdd_stress: "",
+            hdd_stress: [],
             status: "",
             colorTip:'background:#999999',
-            loading: false
+            loading: false,
+            interrupt: false,
+            cmd_infor: "",
+            stop_status: "",
+            stop_colorTip: 'background:#999999'
+
         }
     },
 
     methods: {
         start(){
             if(this.qqt){
-                this.loading = true 
+                this.loading = true
+                this.status = 'Checking...'
+                this.colorTip="background:#29E8E8"
                 getHddStress(this.value).then(res => {
                     this.stressHDD = res.data
-                    this.hdd_stress = this.stressHDD.hdd_log
+                    this.hdd_stress = this.stressHDD.hdd_log.split('\n');
                     this.status = this.stressHDD.status
                     if(this.status=='PASS'){
                         this.loading = false
@@ -106,7 +115,13 @@ export default {
         stop() {
             if(this.qqt) {
                 this.loading = false
-                getStopStress()
+                this.interrupt = true
+                getStopStress().then(res => {
+                    this.cmd_infor = res.data.cmd_infor
+                    this.stop_status = res.data.status
+                    this.stop_colorTip="background:#EE1111"
+                    
+                })
             }
         },
 
@@ -208,9 +223,10 @@ body .el-scrollbar__wrap {
     height: 100px;
 }
 .grid-content2 {
-    display: flex;
+   
     align-items: center;
     height: 250px;
+    overflow-y:scroll ;
 }
 grid-content3{
     border-radius: 30px;
@@ -224,15 +240,15 @@ grid-content3{
     text-align: center;
     font-size: 14px;
     color: #999;
-    padding: 0px 0px 8px 400px;
+    padding: 0px 0px 10px 250px;
 }
 .select_choice {
     text-align: center;
-    padding: 0px 90px 0px 250px;
+    padding: 0px 60px 0px 150px;
 }
 
 .chongzhi {
-    margin-left: 90px;
+    margin-left: 60px;
 }
 
 .grid-num {

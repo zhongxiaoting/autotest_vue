@@ -1,9 +1,40 @@
 // import axiosInstance from './index'
 import axios from "axios"
-import {HOST_NAME, CPU_GET, MEM_GET, NETWORK_GET, HDD_GET, SYSTEM_GET } from './config'
-import {CPU_MCE, MEM_ECC, CPU_STRESS, MEM_STRESS, HDD_STRESS, STOP_STRESS} from './config'
+import {USER_LOGIN, INPUTINFO, LOG_UPLOAD } from './config'
+import {CPU_GET, MEM_GET, NETWORK_GET, HDD_GET, SYSTEM_GET } from './config'
+import {CPU_MCE, MEM_ECC, CPU_STRESS, MEM_STRESS, HDD_STRESS, NET_STRESS, LAN_LOG, RUN_BLACK, BLACK_LOG, STOP_STRESS } from './config'
+import {FIREWARE } from './config'
+/**
+ * 用户登录信息
+ * @param {用户名} username 
+ * @param {密码} password 
+ * @returns 
+ */
+export const getlogin =(username, password) => {
+    return axios.post(USER_LOGIN, {"username": username, "password": password})
+}
 
+/**
+ * 输入服务器信息
+ * @param {*} sn 
+ * @param {*} worker 
+ * @param {*} ip 
+ * @returns 
+ */
+export const postInput =(sn, worker, ip) => {
+    return axios.post(INPUTINFO ,{'sn': sn,  'worker':worker, 'ip':ip})}
 
+/**
+ * 提交日志文件
+ * @returns 
+ */
+export const postUpload =() => {
+    return axios.post(LOG_UPLOAD)
+}
+
+/**
+ * 系统信息
+ */
 export const getsystem =() => {
     return axios.get(SYSTEM_GET)
 }
@@ -19,6 +50,14 @@ export const getnetwork =() => {
 }
 export const gethdd =() => {
     return axios.get(HDD_GET)
+}
+
+/**
+ * 信息校对
+ * @returns 
+ */
+export const getfireware =() => {
+    return axios.get(FIREWARE)
 }
 
 
@@ -45,12 +84,26 @@ export const getHddStress =(time) => {
     return axios.post(HDD_STRESS,{'time': time})
 }
 
+export const getNetworkStress =(time) => {
+    return axios.post(NET_STRESS,{'time': time})
+}
+
+export const getLanLog =() => {
+    return axios.get(LAN_LOG)
+}
+
+export const getBlackCheck = () => {
+    return axios.get(RUN_BLACK)
+}
+
+export const getBlackLog =() => {
+    return axios.get(BLACK_LOG)
+}
 
 export const getStopStress =() => {
     return axios.get(STOP_STRESS)
 }
 
-export const  postBooks =(sn, worker, ip) => {
-    return axios.post(HOST_NAME ,{'sn': sn,  'worker':worker, 'ip':ip})}
+
 
 

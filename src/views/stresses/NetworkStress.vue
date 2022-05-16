@@ -2,49 +2,159 @@
     <div>
         <el-row>
             <el-col :span="24">
-                            <el-card class="cardx" shadow="hover" :body-style="{ padding: '0px' }">
-                                <div class="grid-content grid-con-3">
-                                    <i class="el-icon-message-solid grid-con-icon"></i>
-                                    <div class="grid-cont-right">
-                                        <div class="grid-num">网卡压力测试</div>
-                                        <el-switch v-model="qqt" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
-                                    </div>
-                                </div>
-                            </el-card>
-                            <!-- <div class="cardx"></div> -->
-                        </el-col>
+                <el-card class="cardx" shadow="hover" :body-style="{ padding: '0px' }">
+                    <div class="grid-content grid-con-3">
+                        <i class="el-icon-message-solid grid-con-icon"></i>
+                        <div>
+                            <div class="grid-cont-right">
+                                <span class="grid-num">网卡压力测试</span>
+                            </div>
+                            <div>
+                                <span class="select_choice">
+                                    <el-select v-model="value" placeholder="请选择压力测试时间">
+                                        <el-option
+                                        v-for="item in options"
+                                        :key="item.value"
+                                        :value="item.value"
+                                        :label="item.label">
+                                        </el-option>
+                                    </el-select>
+                                </span>
+                                <el-switch v-model="qqt" active-color="#13ce66" inactive-color="#ff4949" @change="start()"></el-switch> 
+                                <el-button type="primary" round class="chongzhi" @click="refresh()">清空信息</el-button>  
+                            </div> 
+                        </div>
+                    </div>
+                </el-card>
+            </el-col>
         </el-row>       
-                <el-row>
-                    <el-col>
-                        <div class="nav-title grid-content3 bg-purple1">网卡压力测试</div>
-                    </el-col>
-                </el-row>
-                <el-row type="flex">
-                    <el-col :span="17" :offset="3"><el-card class="grid-content2 bg-purple nb"></el-card></el-col>
-                </el-row>
-        
+            <el-row type="flex">
+                <el-col :span="17" :offset="3" v-loading="loading">
+                    <el-card class="grid-content2 bg-purple nb" v-if="interrupt===false">
+                        <div v-for="(item,index) in lan_stress" :key="index">{{item}}</div>
+                    </el-card>
+                <el-card class="grid-content2 bg-purple nb" v-else>
+                        <div >{{cmd_infor}}</div>
+                </el-card>
+                </el-col>
+            </el-row>
             <el-row type="flex" justify="space-around">
-                <el-col :span="4">
-                    <el-tag effect="dark" type="success" class="grid-content nav-title">PASS</el-tag>
-                    </el-col>
-                <el-col :span="4">
-                    <el-tag effect="dark" type="info" class="grid-content nav-title">结束测试</el-tag>
-                    </el-col>       
+                <el-col :span="3">
+                    <el-tag effect="dark" :style="colorTip" type="info" class="grid-content nav-title" v-if="interrupt===false">{{status||'等待测试'}}</el-tag>
+                    <el-tag effect="dark" :style="stop_colorTip" type="info" class="grid-content nav-title" v-if="interrupt===true">{{stop_status||'等待测试'}}</el-tag>
+                </el-col>
+                <el-button :span="3" type="danger" class="nav-title grid-content" @click="stop()">结束测试</el-button>
             </el-row>
     </div>
 </template>
 
 <script>
+import { getNetworkStress, getLanLog ,getStopStress } from '../../api/api.js';
 export default {    
+    inject:['reload'],
+
     data() {
         return {
-            qqt: false
+             options: [{
+                label: '30s',
+                value: '30s'
+                }, {
+                label: '1m',
+                value: '1m'
+                }, {
+                 label: '5m',
+                value: '5m'
+                }, {
+                label: '1h',
+                value: '1h'
+                },{
+                label: '2h',
+                value: '2h'
+                },{
+                label: '24h',
+                value: '24h'
+                }],
+            value: '',
+            qqt: false,
+            stressLAN: [],
+            lan_stress: [],
+            status: "",
+            cmd_infor: [],
+            colorTip:'background:#999999',
+            loading: false,
+            interrupt: false,
+            stop_status: "",
+            stop_colorTip: 'background:#999999',
+            timer1:null,
         }
+    },
 
-    } 
+
+    methods: {
+        start(){
+            if(this.qqt){
+                this.loading = true 
+                getNetworkStress(this.value).then()
+                this.timer1=setInterval(()=>{
+                    this.read_log();
+                },1000)
+                
+            }   
+        },
+
+        read_log(){
+            getLanLog().then(res => {
+                this.stressLAN = res.data
+                this.lan_stress = this.stressLAN.lan_log.split("\n")
+                this.status = this.stressLAN.status
+                if (this.status == 'Checking...') {
+                    this.loading = false
+                    this.colorTip = "background:#29E8E8"
+                }
+                else if(this.status=='PASS'){
+                    this.loading = false
+                    this.colorTip="background:#00EE30"
+                    clearInterval(this.timer1)
+                }else if(this.status=='FAIL'){
+                    this.loading = false
+                    this.colorTip="background:#EE1111"
+                }else{
+                    this.loading = false
+                    this.colorTip="background:#EE1111"
+                }
+            })
+        },
+
+        stop() {
+            clearInterval(this.timer1);
+            if(this.qqt) {
+                this.loading = false
+                this.interrupt = true
+                getStopStress().then(res => {
+                    this.cmd_infor = res.data.cmd_infor
+                    this.stop_status = res.data.status
+                    this.stop_colorTip="background:#EE1111"
+                    
+                })
+            }
+
+        },
+
+        refresh(){
+            this.reload()
+            clearInterval(this.timer1)
+        },
+    },
+    beforeDestroy(){
+        clearInterval(this.timer1);
+    }
 }
 </script>
 <style scoped>
+  body {
+    margin: 0;
+  }
+
 .nb {
  cursor: pointer;
  /* width: 1254px;
@@ -69,7 +179,8 @@ export default {
 .nav-title{
     font-size: 25px;
     margin-top: 1px;
-    text-align: left;
+    text-align: center;
+    
 }
 .row-bg {
     padding: 10px 0;
@@ -128,9 +239,10 @@ export default {
     height: 100px;
 }
 .grid-content2 {
-    display: flex;
+   
     align-items: center;
     height: 250px;
+    overflow-y:scroll ;
 }
 grid-content3{
     border-radius: 30px;
@@ -144,6 +256,15 @@ grid-content3{
     text-align: center;
     font-size: 14px;
     color: #999;
+    padding: 0px 0px 10px 250px;
+}
+.select_choice {
+    text-align: center;
+    padding: 0px 60px 0px 150px;
+}
+
+.chongzhi {
+    margin-left: 60px;
 }
 
 .grid-num {

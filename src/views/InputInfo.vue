@@ -19,8 +19,6 @@
           <el-col span="12">
             <el-card shadow="hover" class="nb">
               <el-form ref="formRef" :model="form" label-width="80px">
-                        
-                    
                         <el-form-item label="SN号:" class="zhiti1" prop="sn">
                             <el-input v-model="form.sn"></el-input>
                         </el-form-item>
@@ -56,7 +54,7 @@
 </template>
 
 <script>
-import { postBooks } from '../api/api.js'
+import { postInput } from '../api/api.js'
    export default {
     data() {
       return {
@@ -65,30 +63,44 @@ import { postBooks } from '../api/api.js'
           worker: '',
           ip: '',
         },
-        
-        
-        
+        status: ''
+    
       }
     },
+
     methods: {
-      
-      
-      onSubmit() {
-        this.$alert('提交成功', 'good', {
-          confirmButtonText: '确定',
-          callback: action => {
-            this.$message({
-              type: 'info',
-              message: `action: ${ action }`
-            });
-          }
-        });
-        
-        postBooks(this.form.sn,  this.form.worker, this.form.ip).then(res => {
-          console.log(res)
-        })
-   
-      }
+        onSubmit() {
+            postInput(this.form.sn,  this.form.worker, this.form.ip).then(res => {
+                this.status = res.data.status
+                if (this.status == 'true'){
+                    this.$alert('提交成功', 'good', {
+                    confirmButtonText: '确定',
+                    callback: action => {
+                      this.$message({
+                        type: 'info',
+                        message: `action: ${ action }`
+                      },
+                      this.$router.push({name: 'AllHardwareInfo'})
+                      );
+                    },
+                  });
+                  
+                } else {
+                    this.$alert('提交失败，请重新输入', 'error', {
+                      confirmButtonText : '确定',
+                      callback: action => {
+                        this.$message({
+                          type: 'info',
+                          message: `action: ${ action }`
+                        })
+                      }
+                    })
+                }
+
+
+            })
+
+        }
     }
 }
 

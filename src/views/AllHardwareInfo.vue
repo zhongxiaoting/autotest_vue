@@ -112,6 +112,10 @@
                                 <table border="0" style="width: 100%">
                                 <tbody> 
                                     <tr>
+                                        <td>硬盘名称: </td>
+                                        <td>{{item.name}}</td>
+                                    </tr>
+                                    <tr>
                                         <td>硬盘版本: </td>
                                         <td>{{item.version}}</td>
                                     </tr>

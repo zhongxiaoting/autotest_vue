@@ -5,7 +5,7 @@
             <i v-if="!collapse" class="el-icon-s-fold"></i>
             <i v-else class="el-icon-s-unfold"></i>
         </div>
-        <div class="logo">自动化测试系统</div>
+        <div class="logo">自动化产测系统</div>
         <div class="header-right">
             <div class="header-user-con">
                 <!-- 消息中心 -->
@@ -47,7 +47,7 @@ import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 export default {
     setup() {
-        const username = localStorage.getItem("ms_username");
+        const username = localStorage.getItem("username");
         const message = 2;
 
         const store = useStore();
@@ -67,7 +67,7 @@ export default {
         const router = useRouter();
         const handleCommand = (command) => {
             if (command == "loginout") {
-                localStorage.removeItem("ms_username");
+                localStorage.removeItem("username");
                 router.push("/login");
             } else if (command == "user") {
                 router.push("/user");

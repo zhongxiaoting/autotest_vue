@@ -7,7 +7,10 @@
                                     <i class="el-icon-message-solid grid-con-icon"></i>
                                     <div class="grid-cont-right">
                                         <div class="grid-num">系统信息与MES对比结果</div>
-                                        <el-switch v-model="value" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
+                                        <div>
+                                          <el-switch v-model="qqt" active-color="#13ce66" inactive-color="#ff4949" @change="start()"></el-switch> 
+                                          <el-button type="primary" round class="chongzhi" @click="refresh()">清空信息</el-button>    
+                                      </div>
                                     </div>
                                 </div>
                             </el-card>
@@ -30,69 +33,82 @@
         <el-row type="flex" justify="center" gutter="100" class="row-bg1">
 
           <el-col span="12">
-            <el-card shadow="hover" class="nb">
-              <el-form ref="formRef" :model="form" label-width="80px" >
-                        
-                    
-                        <el-form-item label="固件版本:" class="zhiti1" prop="name">
-                            <el-input v-model="form.name"></el-input>
+            <el-card shadow="hover" class="nb" style="min-width:300px">
+              <el-form ref="formRef" :model="form" label-width="90px" >
+                        <el-form-item label="产品系列:" class="zhiti1" prop="name">
+                            <div>{{product.product_name}}</div>
                         </el-form-item>
-                        <el-form-item label="固件日期:" class="zhiti1" prop="region">
-                            <el-input v-model="form.region"></el-input>
+                        <el-form-item label="系统序列号:" class="zhiti1" prop="region">
+                            <div>{{sn.system_sn}}</div>
                         </el-form-item>
-                        <el-form-item label="BIOS版本:" class="zhiti1" prop="hexing">
-                            <el-input v-model="form.hexing"></el-input>
+                        <el-form-item label="制造商:" class="zhiti1" prop="hexing">
+                            <div>{{manfacturer.system_manufacturer}}</div>
                         </el-form-item>
-                        <el-form-item label="BMC版本:" class="zhiti1" prop="xingcheng">
-                            <el-input v-model="form.xiangcheng"></el-input>
+                        <el-form-item label="系统版本:" class="zhiti1" prop="xingcheng">
+                            <div>{{version.system_version}}</div>
                         </el-form-item>
-                        <el-form-item label="远程IP:" class="zhiti1" prop="sudu">
-                            <el-input v-model="form.sudu"></el-input>
+                        <el-form-item label="BIOS版本:" class="zhiti1" prop="sudu">
+                            <div>{{_bios_version.bios_version}}</div>
                         </el-form-item>
+                        <el-form-item label="BMC版本:" class="zhiti1" prop="sudu">
+                            <div>{{_bmc_version.bmc_version}}</div>
+                        </el-form-item>
+                        <!-- <el-form-item label="" class="zhiti1" prop="sudu">
+                            <el-input></el-input>
+                        </el-form-item> -->
 
                             
                     </el-form>
             </el-card>
           </el-col>
           <el-col span="12">
-          <el-card shadow="hover" class="nb">
-            <el-form ref="formRef" :model="form" label-width="80px">
-              <el-form-item label="固件版本:" class="zhiti1" prop="name">
-                            <el-input v-model="form.name"></el-input>
+          <el-card shadow="hover" class="nb" style="min-width:300px">
+            <el-form ref="formRef" :model="form" label-width="90px">
+                        <el-form-item label="产品系列:" class="zhiti1" prop="name">
+                            <div>{{product.mes_product_name}}</div>
                         </el-form-item>
-                        <el-form-item label="固件日期:" class="zhiti1" prop="region">
-                            <el-input v-model="form.region"></el-input>
+                        <el-form-item label="系统序列号:" class="zhiti1" prop="region">
+                            <div >{{sn.mes_system_sn}}</div>
                         </el-form-item>
-                        <el-form-item label="BIOS版本:" class="zhiti1" prop="hexing">
-                            <el-input v-model="form.hexing"></el-input>
+                        <el-form-item label="制造商:" class="zhiti1" prop="hexing">
+                            <div >{{manfacturer.mes_system_manufacturer}}</div>
                         </el-form-item>
-                        <el-form-item label="BMC版本:" class="zhiti1" prop="xingcheng">
-                            <el-input v-model="form.xiangcheng"></el-input>
+                        <el-form-item label="系统版本:" class="zhiti1" prop="xingcheng">
+                            <div >{{version.mes_system_version}}</div>
                         </el-form-item>
-                        <el-form-item label="远程IP:" class="zhiti1" prop="sudu">
-                            <el-input v-model="form.sudu"></el-input>
-                        </el-form-item>              
+                        <el-form-item label="BIOS版本:" class="zhiti1" prop="sudu">
+                            <div >{{_bios_version.mes_bios_version}}</div>
+                        </el-form-item>         
+                        <el-form-item label="BMC版本:" class="zhiti1" prop="sudu">
+                            <div >{{_bmc_version.mes_bmc_version}}</div>
+                        </el-form-item>     
+                        <!-- <el-form-item label="" class="zhiti1" prop="sudu">
+                            <el-input ></el-input>
+                        </el-form-item>   -->
                     </el-form>
           </el-card>
 
           </el-col>
           <el-col span="1">
-            <el-card shadow="hover" class="nb">
-              <el-form ref="formRef" :model="form" label-width="0px">
+            <el-card shadow="hover" class="nb" style="min-width:100px">
+              <el-form ref="formRef" :model="form" label-width="10px">
                         <el-form-item>
-                            <el-tag size="medium" effect="dark" type="success">pass</el-tag>
+                            <el-tag size="medium" effect="dark" type="success">{{product.status||'wait'}}</el-tag>
                         </el-form-item>
                         <el-form-item>
-                            <el-tag size="medium" effect="dark" type="danger">pass</el-tag>
+                            <el-tag size="medium" effect="dark" type="danger">{{sn.status||'wait'}}</el-tag>
                         </el-form-item>
                         <el-form-item>
-                            <el-tag size="medium" effect="dark" type="warning">pass</el-tag>
+                            <el-tag size="medium" effect="dark" type="warning">{{manfacturer.status||'wait'}}</el-tag>
                         </el-form-item>
                         <el-form-item>
-                            <el-tag size="medium" effect="dark" type="success">pass</el-tag>
+                            <el-tag size="medium" effect="dark" type="success">{{version.status||'wait'}}</el-tag>
                         </el-form-item>
                         <el-form-item >
-                            <el-tag size="medium" effect="dark" type="success">pass</el-tag>
+                            <el-tag size="medium" effect="dark" type="success">{{_bios_version.status||'wait'}}</el-tag>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-tag size="medium" effect="dark" type="warning">{{_bmc_version.status||'wait'}}</el-tag>
                         </el-form-item>
 
               </el-form>
@@ -115,32 +131,47 @@
 </template>
 
 <script>
-   export default {
-    data() {
-      return {
+import { getfireware } from '../../api/api.js';
 
-        value: false,
-    
-        form: {
-          name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: ''
-        
+export default {
+
+    inject:['reload'],
+
+    data() {
+        return {
+        qqt: false,
+        product: '',
+        sn: '',
+        manfacturer: '',
+        version: '',
+        _bios_version: '',
+        _bmc_version: ''
+
         }
-    
-      }
     },
+
     methods: {
-      onSubmit() {
-        console.log('submit!');
-      }
+      start(){
+          if(this.qqt){
+              getfireware().then(res => {
+                  console.log("ces",res);
+                  this.product = res.data.checkout_product
+                  this.sn = res.data.checkout_sn
+                  this.manfacturer = res.data.checkout_manfacturer
+                  this.version = res.data.checkout_version
+                  this._bios_version = res.data.checkout_bios_version
+                  this._bmc_version = res.data.checkout_bmc_version
+              })
+            //   console.log("测试",this.sn.status);
+          }
+      },
+
+      refresh(){
+          this.reload()
+      },
+
     }
-  }
+}
 </script>
 <style scoped>
 .nb {
@@ -236,4 +267,9 @@
   .box-card {
     width: 480px;
   }
+  .chongzhi {
+    margin-left: 90px;
+    margin-top: 10px;
+}
+
 </style>

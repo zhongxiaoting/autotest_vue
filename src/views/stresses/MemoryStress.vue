@@ -31,7 +31,7 @@
             <el-row type="flex">
                 <el-col :span="17" :offset="3" v-loading="loading">
                     <el-card class="grid-content2 bg-purple nb" v-if="interrupt===false">
-                        {{mem_stress}}
+                        <div v-for="(item,index) in mem_stress" :key="index">{{item}}</div>
                     </el-card>
                     <el-card class="grid-content2 bg-purple nb" v-if="interrupt===true">
                         {{cmd_infor}}
@@ -77,7 +77,7 @@ export default {
             value: '',
             qqt: false,
             stressMEM: [],
-            mem_stress: "",
+            mem_stress: [],
             status: "",
             cmd_infor: "",
             colorTip:'background:#999999',
@@ -94,7 +94,7 @@ export default {
                 this.loading = true 
                 getMemStress(this.value).then(res => {
                     this.stressMEM = res.data
-                    this.mem_stress = this.stressMEM.mem_stress
+                    this.mem_stress = this.stressMEM.mem_stress.split("\n")
                     this.status = this.stressMEM.status
                     if(this.status=='PASS'){
                         this.loading = false
@@ -116,11 +116,8 @@ export default {
                 getStopStress().then(res => {
                     this.cmd_infor = res.data.cmd_infor
                     this.stop_status = res.data.status
-                    if(this.stop_status=='PASS'){
-                        this.stop_colorTip="background:#00EE30"
-                    }else if(this.stop_status=='FAIL'){
-                        this.stop_colorTip="background:#EE1111"
-                    }
+                    this.stop_colorTip="background:#EE1111"
+                    
                 })
             }
 
@@ -237,15 +234,15 @@ grid-content3{
     text-align: center;
     font-size: 14px;
     color: #999;
-    padding: 0px 0px 8px 400px;
+    padding: 0px 0px 10px 250px;
 }
 .select_choice {
     text-align: center;
-    padding: 0px 90px 0px 250px;
+    padding: 0px 60px 0px 150px;
 }
 
 .chongzhi {
-    margin-left: 90px;
+    margin-left: 60px;
 }
 
 .grid-num {

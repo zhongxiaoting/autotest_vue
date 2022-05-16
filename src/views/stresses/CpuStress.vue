@@ -29,7 +29,14 @@
             </el-col>
         </el-row>       
             <el-row type="flex">
-                <el-col :span="17" :offset="3" v-loading="loading"><el-card class="grid-content2 bg-purple nb">{{cpu_stress.cmd_infor}}</el-card></el-col>
+                <el-col :span="17" :offset="3" v-loading="loading">
+                    <el-card class="grid-content2 bg-purple nb" v-if="interrupt===false">
+                        <div v-for="(item,index) in cpu_stress_infor" :key="index">{{item}}</div>
+                    </el-card>
+                    <el-card class="grid-content2 bg-purple nb" v-if="interrupt===true">
+                        {{cmd_infor}}
+                    </el-card>
+                </el-col>
             </el-row>
             <el-row type="flex" justify="space-around">
                 <el-col :span="3">
@@ -70,9 +77,13 @@ export default {
             qqt: false,
             stressCPU: [],
             cpu_stress: "",
+            cpu_stress_infor:[],
             status: "",
             colorTip:'background:#999999',
-            loading: false
+            loading: false,
+            interrupt: false,
+            cmd_infor: "",
+            stop_status: ""
         }
     },
 
@@ -83,6 +94,7 @@ export default {
                 getCpuStress(this.value).then(res => {
                     this.stressCPU = res.data
                     this.cpu_stress = this.stressCPU.cpu_stress
+                    this.cpu_stress_infor=this.cpu_stress.cmd_infor.split('\n');
                     this.status = this.stressCPU.status
                     if(this.status=='PASS'){
                         this.loading = false
@@ -100,7 +112,13 @@ export default {
         stop() {
             if(this.qqt) {
                 this.loading = false
-                getStopStress()
+                this.interrupt = true
+                getStopStress().then(res => {
+                    this.cmd_infor = res.data.cmd_infor
+                    this.stop_status = res.data.status
+                    this.stop_colorTip="background:#EE1111"
+                    
+                })
             }
 
         },
@@ -216,15 +234,15 @@ grid-content3{
     text-align: center;
     font-size: 14px;
     color: #999;
-    padding: 0px 0px 8px 400px;
+    padding: 0px 0px 10px 250px;
 }
 .select_choice {
     text-align: center;
-    padding: 0px 90px 0px 250px;
+    padding: 0px 60px 0px 150px;
 }
 
 .chongzhi {
-    margin-left: 90px;
+    margin-left: 60px;
 }
 
 .grid-num {

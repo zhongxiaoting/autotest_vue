@@ -120,12 +120,12 @@ export default {
             },
 
 
-
             {
                 icon: "el-icon-lx-copy",
                 index: "/OneKeyTest",
-                title: "一键测试界面",
+                title: "一键自动化产测界面",
             },
+
             
         ];
 
