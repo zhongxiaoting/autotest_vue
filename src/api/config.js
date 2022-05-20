@@ -30,6 +30,8 @@ export const HDD_GET = HOST_NAME + '/api/infor/hdd_info'
  */
 export const FIREWARE = HOST_NAME + '/api/checkout/system_checkout'
 
+export const CPU_CHECK = HOST_NAME + '/api/checkout/cpu_checkout'
+
 /**
  * 性能测试
  */

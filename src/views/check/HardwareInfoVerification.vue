@@ -52,12 +52,7 @@
                         </el-form-item>
                         <el-form-item label="BMC版本:" class="zhiti1" prop="sudu">
                             <div>{{_bmc_version.bmc_version}}</div>
-                        </el-form-item>
-                        <!-- <el-form-item label="" class="zhiti1" prop="sudu">
-                            <el-input></el-input>
-                        </el-form-item> -->
-
-                            
+                        </el-form-item>       
                     </el-form>
             </el-card>
           </el-col>
@@ -82,9 +77,6 @@
                         <el-form-item label="BMC版本:" class="zhiti1" prop="sudu">
                             <div >{{_bmc_version.mes_bmc_version}}</div>
                         </el-form-item>     
-                        <!-- <el-form-item label="" class="zhiti1" prop="sudu">
-                            <el-input ></el-input>
-                        </el-form-item>   -->
                     </el-form>
           </el-card>
 
@@ -93,22 +85,22 @@
             <el-card shadow="hover" class="nb" style="min-width:100px">
               <el-form ref="formRef" :model="form" label-width="10px">
                         <el-form-item>
-                            <el-tag size="medium" effect="dark" type="success">{{product.status||'wait'}}</el-tag>
+                            <el-tag size="medium" effect="dark" :style="colorTip">{{product.status||'wait'}}</el-tag>
                         </el-form-item>
                         <el-form-item>
-                            <el-tag size="medium" effect="dark" type="danger">{{sn.status||'wait'}}</el-tag>
+                            <el-tag size="medium" effect="dark" :style="colorTip">{{sn.status||'wait'}}</el-tag>
                         </el-form-item>
                         <el-form-item>
-                            <el-tag size="medium" effect="dark" type="warning">{{manfacturer.status||'wait'}}</el-tag>
+                            <el-tag size="medium" effect="dark" :style="colorTip">{{manfacturer.status||'wait'}}</el-tag>
                         </el-form-item>
                         <el-form-item>
-                            <el-tag size="medium" effect="dark" type="success">{{version.status||'wait'}}</el-tag>
+                            <el-tag size="medium" effect="dark" :style="colorTip">{{version.status||'wait'}}</el-tag>
                         </el-form-item>
                         <el-form-item >
-                            <el-tag size="medium" effect="dark" type="success">{{_bios_version.status||'wait'}}</el-tag>
+                            <el-tag size="medium" effect="dark" :style="colorTip">{{_bios_version.status||'wait'}}</el-tag>
                         </el-form-item>
                         <el-form-item>
-                            <el-tag size="medium" effect="dark" type="warning">{{_bmc_version.status||'wait'}}</el-tag>
+                            <el-tag size="medium" effect="dark" :style="colorTip">{{_bmc_version.status||'wait'}}</el-tag>
                         </el-form-item>
 
               </el-form>
@@ -117,7 +109,7 @@
         </el-row>
         <el-row type="flex" justify="space-around" class="row-bg1">
                 <el-col :span="4">
-                    <el-button round plain type="success" class="grid-content nav-title">ALL PASS</el-button>
+                    <el-button round plain :style="colorTip" class="grid-content nav-title">{{all_status||'等待测试'}}</el-button>
                     </el-col>
                 <el-col :span="4">
                     <el-button round plain type="info" class="grid-content nav-title">结束测试</el-button>
@@ -145,7 +137,9 @@ export default {
         manfacturer: '',
         version: '',
         _bios_version: '',
-        _bmc_version: ''
+        _bmc_version: '',
+        all_status: '',
+        colorTip:'background:#999999',
 
         }
     },
@@ -161,6 +155,8 @@ export default {
                   this.version = res.data.checkout_version
                   this._bios_version = res.data.checkout_bios_version
                   this._bmc_version = res.data.checkout_bmc_version
+                  this.colorTip="background:#00EE30"
+                  this.all_status = 'PASS'
               })
             //   console.log("测试",this.sn.status);
           }

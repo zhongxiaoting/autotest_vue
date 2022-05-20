@@ -80,19 +80,19 @@
             <el-card shadow="hover" class="nb">
               <el-form ref="formRef" :model="form" label-width="0px">
                         <el-form-item>
-                            <el-tag size="medium" effect="dark" type="success">pass</el-tag>
+                            <el-tag size="medium" effect="dark" :style="colorTip">pass</el-tag>
                         </el-form-item>
                         <el-form-item>
-                            <el-tag size="medium" effect="dark" type="danger">pass</el-tag>
+                            <el-tag size="medium" effect="dark" :style="colorTip">pass</el-tag>
                         </el-form-item>
                         <el-form-item>
-                            <el-tag size="medium" effect="dark" type="warning">pass</el-tag>
+                            <el-tag size="medium" effect="dark" :style="colorTip">pass</el-tag>
                         </el-form-item>
                         <el-form-item>
-                            <el-tag size="medium" effect="dark" type="success">pass</el-tag>
+                            <el-tag size="medium" effect="dark" :style="colorTip">pass</el-tag>
                         </el-form-item>
                         <el-form-item >
-                            <el-tag size="medium" effect="dark" type="success">pass</el-tag>
+                            <el-tag size="medium" effect="dark" :style="colorTip">pass</el-tag>
                         </el-form-item>
 
               </el-form>
@@ -129,7 +129,8 @@
           delivery: false,
           type: [],
           resource: '',
-          desc: ''
+          desc: '',
+          colorTip:'background:#999999',
         
         }
     

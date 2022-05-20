@@ -38,30 +38,30 @@
                     <el-card class="grid-content bg-purple nav-title nb">系统信息检查<i class="el-icon-loading"></i></el-card>
                     </el-col>
                 <el-col :span="3">
-                <el-tag type="success" class="grid-content nav-title">PASS</el-tag>
+                <el-tag type="success" class="grid-content nav-title">{{sys_status||'Waiting'}}</el-tag>
                 </el-col>
                 <el-col :span="5">
                     <el-card class="grid-content bg-purple nav-title nb">CPU信息检查<i class="el-icon-cpu"></i></el-card></el-col>
                 <el-col :span="3">
-                    <el-tag type="danger" class="grid-content nav-title">FAIL!</el-tag>
+                    <el-tag type="danger" class="grid-content nav-title">{{cpu_status||'Waiting'}}</el-tag>
                 </el-col>
                 <el-col :span="5"><el-card class="grid-content bg-purple nav-title nb">内存信息检查<i class="el-icon-message-solid"></i></el-card></el-col>
                 <el-col :span="3">
-                    <el-tag type="success" class="grid-content nav-title">PASS</el-tag>
+                    <el-tag type="success" class="grid-content nav-title">{{mem_status||'Waiting'}}</el-tag>
                 </el-col>
             </el-row>
             <el-row :gutter="20">
                 <el-col :span="5"><el-card class="grid-content bg-purple nav-title nb">网卡信息检查<i class="el-icon-umbrella"></i></el-card></el-col>
                 <el-col :span="3">
-                    <el-tag type="warning" class="grid-content nav-title">Waiting...</el-tag>
+                    <el-tag type="warning" class="grid-content nav-title">{{net_status||'Waiting'}}</el-tag>
                     </el-col>
                 <el-col :span="5"><el-card class="grid-content bg-purple nav-title nb">NVME信息检查<i class="el-icon-s-promotion"></i></el-card></el-col>
                 <el-col :span="3">
-                    <el-tag type="success" class="grid-content nav-title">PASS</el-tag>
+                    <el-tag type="success" class="grid-content nav-title">{{hdd_status||'Waiting'}}</el-tag>
                     </el-col>
                 <el-col :span="5"><el-card class="grid-content bg-purple nav-title nb">PCIE设备信息检查<i class="el-icon-s-custom"></i></el-card></el-col>
                 <el-col :span="3">
-                    <el-tag type="danger" class="grid-content nav-title">FAIL!</el-tag>
+                    <el-tag type="danger" class="grid-content nav-title">{{pcie_status||'Waiting'}}</el-tag>
                 </el-col>
             </el-row>
             <el-row>
@@ -153,6 +153,7 @@ import mem_img from '/src/assets/img/mem.png'
 import hdd_img from '/src/assets/img/hdd.png'
 import network_img from '/src/assets/img/fan.png'
 import { getCpuStress, getMemStress, getHddStress, getNetworkStress, getLanLog, getStopStress, getBlackCheck, getBlackLog, postUpload } from '../api/api.js';
+import { getfireware, getcpucheck } from '../api/api.js';
 export default {    
     inject:['reload'],
 
@@ -184,6 +185,12 @@ export default {
             network_img,
             value: '',
             qqt: false,
+            sys_status: '',
+            cpu_status: '',
+            mem_status: '',
+            hdd_status: '',
+            net_status: '',
+            pcie_status: '',
             stressCPU: [],
             status: "",
             stress_colorTip:'background:#999999',
@@ -205,6 +212,7 @@ export default {
             timer1: null,
             timer2: null,
             timer3: null,
+            timer4: null,
             logUpload: '',
             upload_url: '',
             upload_status: ''
@@ -214,13 +222,22 @@ export default {
     methods: {
         start(){
             if (this.qqt) {
-                this.loading = true 
-                this.cpu_output = 'Checking...'
-                this.memory_output = 'Checking...'
-                this.hdd_output = 'Checking...'
-                this.network_output = 'Checking...'
-                this.all_stress_status = 'Checking...'
-                this.stress_colorTip = "background:##00EE30"
+                this.sys_status = 'PASS'
+                this.cpu_status = 'PASS'
+                this.mem_status = 'PASS'
+                this.hdd_status = 'PASS'
+                this.net_status = 'PASS'
+                this.pcie_status = 'PASS'
+                this.timer4=setTimeout(()=>{
+                    this.loading = true 
+                    this.cpu_output = 'Checking...'
+                    this.memory_output = 'Checking...'
+                    this.hdd_output = 'Checking...'
+                    this.network_output = 'Checking...'
+                    this.all_stress_status = 'Checking...'
+                    this.stress_colorTip = "background:##00EE30"
+                },2000)
+                
                 var promise1=new Promise((resolve,reject)=>{
                         getCpuStress(this.value).then(res => {
                     this.stressCPU = res.data
@@ -363,7 +380,7 @@ export default {
                     clearInterval(this.timer2);
                     this.black_output = 'PASS'
                     // this.colorTip="background:#00EE30"
-                    this.all_status = 'PASS'
+                    this.all_status = 'ALL PASS'
                     this.result_colorTip="background:#00EE30"
                 }else if(this.status=='FAIL'){
                     // this.loading = false

@@ -3,7 +3,7 @@ import axios from "axios"
 import {USER_LOGIN, INPUTINFO, LOG_UPLOAD } from './config'
 import {CPU_GET, MEM_GET, NETWORK_GET, HDD_GET, SYSTEM_GET } from './config'
 import {CPU_MCE, MEM_ECC, CPU_STRESS, MEM_STRESS, HDD_STRESS, NET_STRESS, LAN_LOG, RUN_BLACK, BLACK_LOG, STOP_STRESS } from './config'
-import {FIREWARE } from './config'
+import {FIREWARE, CPU_CHECK } from './config'
 /**
  * 用户登录信息
  * @param {用户名} username 
@@ -60,6 +60,9 @@ export const getfireware =() => {
     return axios.get(FIREWARE)
 }
 
+export const getcpucheck =() => {
+    return axios.get(CPU_CHECK)
+}
 
 /**
  * 性能测试

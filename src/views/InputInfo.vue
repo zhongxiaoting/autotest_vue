@@ -28,9 +28,9 @@
                         <!-- <el-form-item label="测试工站:" class="zhiti1" prop="whereis">
                             <el-input v-model="form.whereis"></el-input>
                         </el-form-item> -->
-                        <el-form-item label="工号:" class="zhiti1" prop="worker">
+                        <!-- <el-form-item label="工号:" class="zhiti1" prop="worker">
                             <el-input v-model="form.worker"></el-input>
-                        </el-form-item>
+                        </el-form-item> -->
                         <el-form-item label="IP号:" class="zhiti1" prop="ip">
                             <el-input v-model="form.ip"></el-input>
                         </el-form-item>
@@ -60,17 +60,18 @@ import { postInput } from '../api/api.js'
       return {
         form: {
           sn: '',
-          worker: '',
           ip: '',
         },
-        status: ''
+        // worker: '',
+        status: '',
     
       }
     },
 
     methods: {
         onSubmit() {
-            postInput(this.form.sn,  this.form.worker, this.form.ip).then(res => {
+            let worker = localStorage.getItem('username');
+            postInput(this.form.sn,  worker, this.form.ip).then(res => {
                 this.status = res.data.status
                 if (this.status == 'true'){
                     this.$alert('提交成功', 'good', {

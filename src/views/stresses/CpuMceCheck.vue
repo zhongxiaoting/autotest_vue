@@ -19,7 +19,11 @@
             </el-col>
         </el-row>       
             <el-row type="flex">
-                <el-col :span="17" :offset="3" v-loading="loading"><el-card class="grid-content2 bg-purple nb">{{cpu_mce_infor.cmd_infor}}</el-card></el-col>
+                <el-col :span="17" :offset="3" v-loading="loading">
+                    <el-card class="grid-content2 bg-purple nb">
+                        <div v-for="(item, index) in cpu_mce_infor" :key="index">{{item}}</div>
+                    </el-card>
+                </el-col>
             </el-row>
             <el-row type="flex" justify="space-around">
                 <el-col :span="3">
@@ -52,7 +56,7 @@ export default {
                 this.loading = true 
                 getCpuMce().then(res => {
                     this.CpuMce = res.data
-                    this.cpu_mce_infor = this.CpuMce.cpu_mec
+                    this.cpu_mce_infor = this.CpuMce.cpu_mec.cmd_infor.split("\n")
                     this.status = this.CpuMce.status
                     if(this.status=='PASS'){
                         this.loading = false
